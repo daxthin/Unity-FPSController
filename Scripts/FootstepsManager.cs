@@ -5,36 +5,36 @@ using UnityEngine;
 public class FootstepsManager : MonoBehaviour
 {
     // Private variables
-    [SerializeField] private AudioClip[] _footsteps;
-    [SerializeField] private float _footstepsInterval = 1;
-    [SerializeField] private float _footstepsRunIntervalMultiplier = 1;
-    [SerializeField] private float _footstepsCrouchInterval = 1;
-    private AudioSource _audioSource;
-    private FootstepsGenerator _footstepsGenerator;
-    private FPSController _fpsController;
-    private bool _isWalking;
-    private float _interval;
+    [SerializeField] private AudioClip[] m_footsteps;
+    [SerializeField] private float m_footstepsInterval = 1;
+    [SerializeField] private float m_footstepsRunIntervalMultiplier = 1;
+    [SerializeField] private float m_footstepsCrouchInterval = 1;
+    private AudioSource m_audioSource;
+    private FootstepsGenerator m_footstepsGenerator;
+    private FPSController m_fpsController;
+    private bool m_isWalking;
+    private float m_interval;
 
     // Properties
     public bool IsWalking
     {
-        set { _isWalking = value; }
-        get { return _isWalking; }
+        set { m_isWalking = value; }
+        get { return m_isWalking; }
     }
     public float Interval
     {
-        set { _interval = value; }
-        get { return _interval; }
+        set { m_interval = value; }
+        get { return m_interval; }
     }
     public AudioClip[] Footsteps
     {
-        set { _footsteps = value; }
-        get { return _footsteps; }
+        set { m_footsteps = value; }
+        get { return m_footsteps; }
     }
     public AudioSource AudioSource
     {
-        set { _audioSource = value; }
-        get { return _audioSource; }
+        set { m_audioSource = value; }
+        get { return m_audioSource; }
     }
 
     public bool Active
@@ -45,31 +45,31 @@ public class FootstepsManager : MonoBehaviour
 
     void Start()
     {
-        _audioSource = gameObject.GetComponent<AudioSource>();
-        _footstepsGenerator = gameObject.GetComponent<FootstepsGenerator>();
-        _interval = _footstepsInterval;
-        _fpsController = gameObject.GetComponent<FPSController>();
+        m_audioSource = gameObject.GetComponent<AudioSource>();
+        m_footstepsGenerator = gameObject.GetComponent<FootstepsGenerator>();
+        m_interval = m_footstepsInterval;
+        m_fpsController = gameObject.GetComponent<FPSController>();
     }
 
     void Update()
     {
 
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
-            if (!_isWalking && _fpsController.IsGrounded)
-                _footstepsGenerator.PlayFootsteps();
+            if (!m_isWalking && m_fpsController.IsGrounded)
+                m_footstepsGenerator.PlayFootsteps();
 
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            _interval = _footstepsInterval / _footstepsRunIntervalMultiplier;
+            m_interval = m_footstepsInterval / m_footstepsRunIntervalMultiplier;
         }
-        else if (_fpsController.IsCrouching)
+        else if (m_fpsController.IsCrouching)
         {
-            _interval = _footstepsInterval * _footstepsCrouchInterval;
+            m_interval = m_footstepsInterval * m_footstepsCrouchInterval;
         }
         else
         {
-            _interval = _footstepsInterval;
+            m_interval = m_footstepsInterval;
         }
     }
 }

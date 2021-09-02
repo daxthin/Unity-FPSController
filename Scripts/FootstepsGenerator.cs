@@ -4,30 +4,30 @@ using UnityEngine;
 
 public class FootstepsGenerator : MonoBehaviour
 {
-    private FootstepsManager _footstepManager;
+    private FootstepsManager m_footstepManager;
 
     private void Start()
     {
-        _footstepManager = gameObject.GetComponent<FootstepsManager>();
+        m_footstepManager = gameObject.GetComponent<FootstepsManager>();
     }
 
     public void PlayFootsteps()
     {
-        StartCoroutine("FootstepsSystem", _footstepManager.Interval);
+        StartCoroutine(FootstepsSystem(m_footstepManager.Interval));
     }
 
     public IEnumerator FootstepsSystem(float timer)
     {
-        int randomIndex = Random.Range(0, _footstepManager.Footsteps.Length);
+        int randomIndex = Random.Range(0, m_footstepManager.Footsteps.Length);
 
-        _footstepManager.AudioSource.clip = _footstepManager.Footsteps[randomIndex];
+        m_footstepManager.AudioSource.clip = m_footstepManager.Footsteps[randomIndex];
 
-        _footstepManager.AudioSource.Play();
+        m_footstepManager.AudioSource.Play();
 
-        _footstepManager.IsWalking = true;
+        m_footstepManager.IsWalking = true;
 
         yield return new WaitForSeconds(timer);
 
-        _footstepManager.IsWalking = false;
+        m_footstepManager.IsWalking = false;
     }
 }

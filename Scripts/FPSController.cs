@@ -26,7 +26,6 @@ public class FPSController : MonoBehaviour
 
     [Header("Slope Bouncing Fix")]
     [SerializeField] private float m_slopeForceDown = 20f;
-    [SerializeField] private float m_slopeForceRayLenght = 1.5f;
 
     [Header("Mouse")]
     [SerializeField] private float m_mouseSensivity = 2.0f;
@@ -102,18 +101,25 @@ public class FPSController : MonoBehaviour
     {
         m_controller = gameObject.GetComponent<CharacterController>();
         m_speed = m_walkSpeed;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
+
+        m_lockCursor = false;
     }
 
     void Update()
     {
-        // Camera setup
-        CameraLook.SetupCamera(m_mouseSensivity, m_clampYRot);
-        CameraLook.MouseLook(m_playerCamera.transform, this.transform);
+        if (m_lockCursor)
+        {
+            // Camera setup
+            CameraLook.SetupCamera(m_mouseSensivity, m_clampYRot);
+            CameraLook.MouseLook(m_playerCamera.transform, this.transform);
 
-        
-        Crouch();
-        CameraSway();
-        SetMovementInput();
+            Crouch();
+            CameraSway();
+            SetMovementInput();
+        }
+
         CalculateMovement();
 
         /* Calculate top velocity */
@@ -137,7 +143,7 @@ public class FPSController : MonoBehaviour
             if (Input.GetMouseButton(0))
                 m_lockCursor = true;
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = false;
+            Cursor.visible = true;
         }
     }
 
@@ -152,8 +158,8 @@ public class FPSController : MonoBehaviour
         Vector3 wishdir = transform.TransformDirection(m_rightMove, 0, m_forwardMove);
 
         // Add acceleration to the player so player can change directions 
-        m_characterVelocity.x += wishdir.x *  m_airAcceleration * Time.deltaTime;
-        m_characterVelocity.z += wishdir.z *  m_airAcceleration * Time.deltaTime;
+        m_characterVelocity.x += wishdir.x * m_airAcceleration * Time.deltaTime;
+        m_characterVelocity.z += wishdir.z * m_airAcceleration * Time.deltaTime;
 
         // Clamp only horizontal velocity
         Vector3 horizontalvelocity = Vector3.ProjectOnPlane(m_characterVelocity, Vector3.up);
@@ -190,7 +196,7 @@ public class FPSController : MonoBehaviour
         }
 
 
-        
+
         // Change between Ground Movement and Air Movement
         if (GroundCheck())
         {

@@ -11,6 +11,7 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float m_runSpeed = 6.0f;
     [SerializeField] private float m_walkRunTransition = 5f;
     [SerializeField] private float m_airAcceleration = 15;
+    [SerializeField] private float m_maxAirAcceleration = 15;
     [SerializeField] private float m_moveSmoothness = 8f;
 
     [Header("Camera Sway Section")]
@@ -151,12 +152,12 @@ public class FPSController : MonoBehaviour
         Vector3 wishdir = transform.TransformDirection(m_rightMove, 0, m_forwardMove);
 
         // Add acceleration to the player so player can change directions 
-        m_characterVelocity.x += wishdir.x * m_airAcceleration * Time.deltaTime;
-        m_characterVelocity.z += wishdir.z * m_airAcceleration * Time.deltaTime;
+        m_characterVelocity.x += wishdir.x *  m_airAcceleration * Time.deltaTime;
+        m_characterVelocity.z += wishdir.z *  m_airAcceleration * Time.deltaTime;
 
         // Clamp only horizontal velocity
         Vector3 horizontalvelocity = Vector3.ProjectOnPlane(m_characterVelocity, Vector3.up);
-        horizontalvelocity = Vector3.ClampMagnitude(horizontalvelocity, m_airAcceleration);
+        horizontalvelocity = Vector3.ClampMagnitude(horizontalvelocity, m_maxAirAcceleration);
         m_characterVelocity = horizontalvelocity + (Vector3.up * m_characterVelocity.y);
     }
 
